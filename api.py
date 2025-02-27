@@ -57,6 +57,10 @@ def get_channel_info(channel_id):
     else:
         return jsonify({"error": "Failed to fetch channel info"}), response.status_code
 
+
+# 2nd API Used (Just putting areas like this so i don't get confused on what part am i scrolling to)
+###################################################################################################################
+
 # ZenQuotes API Part (Just found this random motivation api)
 # To get a random motivational quote.
 # - A random quote text and the author of the quote.
@@ -84,6 +88,10 @@ def get_quotes_by_author(author):
     url = f"https://zenquotes.io/api/quotes/{author}"
     response = requests.get(url)
     return jsonify(response.json())
+
+
+# 3rd API Used (Just putting areas like this so i don't get confused on what part am i scrolling to)
+###################################################################################################################
 
 # TheMealDB API Part (Figured we can check for some cooking recipe like it's breaking bad)
 # To get a random meal recipe.
