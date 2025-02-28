@@ -1,5 +1,6 @@
 # The plugins i used
 from flask import Flask, jsonify
+from flask_cors import CORS
 import requests
 import os
 from dotenv import load_dotenv
@@ -16,47 +17,43 @@ load_dotenv()
 # https://www.themealdb.com/
 
 app = Flask(__name__)
+CORS(app)
 
-# Youtube API Part (Please don't check my playlist here, it's just some weeb shit)
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-PLAYLIST_ID = "PLwBM_ksR_HWyD9g1BvD_gH89XqQAsYjCx"
-
-# To get all videos from a YouTube playlist.
-# - A list of videos with titles, descriptions, video IDs, and other video details.
-@app.route("/youtube/playlist", methods=["GET"])
-def get_playlist_videos():
-    """Fetches all videos from a YouTube playlist"""
-    url = f"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId={PLAYLIST_ID}&key={YOUTUBE_API_KEY}"
+# Jikan API Part (Fetching anime data)
+# To get random anime recommendation.
+# - Random anime details including title, image URL, and MyAnimeList link.
+@app.route("/anime/random", methods=["GET"])
+def get_random_anime():
+    """Fetches a random anime recommendation"""
+    url = "https://api.jikan.moe/v4/random/anime"
     response = requests.get(url)
-    if response.status_code == 200:
-        return jsonify(response.json())
-    else:
-        return jsonify({"error": "Failed to fetch playlist"}), response.status_code
+    return jsonify(response.json()), response.status_code
 
-# To get details of a specific video by video_id.
-# - Video details like title, description, tags, published date, and thumbnails.
-@app.route("/youtube/video/<video_id>", methods=["GET"])
-def get_video_details(video_id):
-    """Fetches details of a specific video"""
-    url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet&id={video_id}&key={YOUTUBE_API_KEY}"
+# To get currently airing anime.
+# - List of anime that are airing in the current season.
+@app.route("/anime/season/now", methods=["GET"])
+def get_current_season_anime():
+    """Fetches currently airing anime"""
+    url = "https://api.jikan.moe/v4/seasons/now"
     response = requests.get(url)
-    if response.status_code == 200:
-        return jsonify(response.json())
-    else:
-        return jsonify({"error": "Failed to fetch video details"}), response.status_code
+    return jsonify(response.json()), response.status_code
 
-# To get information about a YouTube channel by channel_id.
-# - Channel information like title, description, and view count.
-@app.route("/youtube/channel/<channel_id>", methods=["GET"])
-def get_channel_info(channel_id):
-    """Fetches details of a specific YouTube channel"""
-    url = f"https://www.googleapis.com/youtube/v3/channels?part=snippet&id={channel_id}&key={YOUTUBE_API_KEY}"
+# To search for anime by title.
+# - List of anime matching the search term.
+@app.route("/anime/search/<title>", methods=["GET"])
+def search_anime(title):
+    """Searches for anime by title"""
+    url = f"https://api.jikan.moe/v4/anime?q={title}"
     response = requests.get(url)
-    if response.status_code == 200:
-        return jsonify(response.json())
-    else:
-        return jsonify({"error": "Failed to fetch channel info"}), response.status_code
+    return jsonify(response.json()), response.status_code
 
+# To get anime details by ID
+@app.route("/anime/<int:anime_id>", methods=["GET"])
+def get_anime_by_id(anime_id):
+    """Fetches anime details by ID"""
+    url = f"https://api.jikan.moe/v4/anime/{anime_id}"
+    response = requests.get(url)
+    return jsonify(response.json()), response.status_code
 
 # 2nd API Used (Just putting areas like this so i don't get confused on what part am i scrolling to)
 ###################################################################################################################
