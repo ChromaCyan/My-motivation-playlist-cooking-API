@@ -142,7 +142,7 @@ PLAYLIST_ID = "PLwBM_ksR_HWyD9g1BvD_gH89XqQAsYjCx"
 @app.route("/youtube/playlist", methods=["GET"])
 def get_playlist_videos():
     """Fetches all videos from a YouTube playlist"""
-    url = f"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId={PLAYLIST_ID}&key={YOUTUBE_API_KEY}"
+    url = f"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={PLAYLIST_ID}&key={YOUTUBE_API_KEY}"
     response = requests.get(url)
     if response.status_code == 200:
         return jsonify(response.json())
@@ -227,7 +227,7 @@ def get_advice_by_id(advice_id):
 @app.route("/advice/slips/<query>", methods=["GET"])
 def get_advice_by_search(query):
     """Fetches advice by search query"""
-    url = f"https://api.adviceslip.com/advice/search/{query}"  # Use f-string to insert the query
+    url = f"https://api.adviceslip.com/advice/search/{query}" 
     response = requests.get(url)
     return jsonify(response.json()), response.status_code
 
